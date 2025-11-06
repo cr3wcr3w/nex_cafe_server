@@ -104,7 +104,7 @@ pub fn Hero() -> Element {
 
     rsx! {
         div {
-            p { "{PROJECTNAME}" }
+            p { class: "text-red-900", "{PROJECTNAME}" }
             p { "{PKG_VERSION}" }
         }
     }

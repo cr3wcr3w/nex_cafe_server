@@ -23,6 +23,7 @@ Desktop server for a cyber cafe (PC rental) business. Built with Dioxus 0.7 for 
 ## Run (Desktop - Windows)
 
 ```bash
+npm run watch:css
 dx serve --windows
 ```
 ## Useful Commands
@@ -40,6 +41,7 @@ cargo +nightly udeps
 
 Bundle:
 ```bash
+npm run build:css
 dx bundle --package-types "msi" // windows
 ```
 
@@ -48,4 +50,3 @@ Formatting:
 cargo fmt
 dx fmt
 ```
-
