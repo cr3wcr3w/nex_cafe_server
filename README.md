@@ -10,9 +10,9 @@ Desktop server for a cyber cafe (PC rental) business. Built with Dioxus 0.7 for 
 - [ ] Billing system (rate per hour, session summary)
 - [ ] Activity logs and reporting
 - [ ] Notifications
-- [ ] System tray support
+- [x] System tray support
   - runs quietly in the system tray
-  - Cannot be closed from the UI (only terminable via Task Manager for security)
+  - Cannot be closed from the UI (only terminable via Task Manager)
 
 ## Tech Stack
 
