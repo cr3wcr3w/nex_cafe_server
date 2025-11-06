@@ -1,6 +1,6 @@
 [package]
 name = "nex_cafe_server"
-version = "0.1.0"
+version = "0.0.0"
 authors = ["cr3wcr3w <racelisjk@gmail.com>"]
 edition = "2021"
 
