@@ -23,8 +23,8 @@ Desktop server for a cyber cafe (PC rental) business. Built with Dioxus 0.7 for 
 ## Run (Desktop - Windows)
 
 ```bash
-npm run watch:css
-dx serve --windows
+npm run watch:css // optional
+dx serve --windows --hot-patch
 ```
 ## Useful Commands
 

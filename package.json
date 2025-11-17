@@ -1,11 +1,11 @@
 {
   "name": "nex_cafe_server",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Desktop server for a cyber cafe (PC rental) business. Built with Dioxus 0.7 for Windows desktop.",
   "main": "index.js",
   "scripts": {
     "build:css": "tailwindcss -i ./tailwind.css -o ./assets/tailwind.css -m",
-    "watch:css": "tailwindcss -i ./tailwind.css -o ./assets/tailwind.css --watch"
+    "watch:css": "tailwindcss -i ./tailwind.css -o ./assets/tailwind.css -m --watch"
   },
   "repository": {
     "type": "git",

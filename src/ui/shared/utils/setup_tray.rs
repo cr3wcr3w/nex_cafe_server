@@ -14,27 +14,31 @@ pub enum TrayAction {
 static TRAY_SENDER: OnceLock<Sender<TrayAction>> = OnceLock::new();
 static TRAY_RECEIVER: OnceLock<Mutex<Receiver<TrayAction>>> = OnceLock::new();
 
-pub fn init_tray_channel(sender: Sender<TrayAction>, receiver: Receiver<TrayAction>) {
-    let _ = TRAY_SENDER.set(sender);
-    let _ = TRAY_RECEIVER.set(Mutex::new(receiver));
-}
+pub struct TrayChannel;
 
-pub fn tray_receiver() -> Option<&'static Mutex<Receiver<TrayAction>>> {
-    TRAY_RECEIVER.get()
-}
+impl TrayChannel {
+    pub fn init(sender: Sender<TrayAction>, receiver: Receiver<TrayAction>) {
+        let _ = TRAY_SENDER.set(sender);
+        let _ = TRAY_RECEIVER.set(Mutex::new(receiver));
+    }
 
-pub fn tray_init() -> TrayItem {
-    // Create tray icon using a Windows resource name embedded via tray.rc
-    let mut tray = TrayItem::new("Nex Cafe", IconSource::Resource("app-icon"))
-        .expect("Failed to create tray icon");
+    pub fn receiver() -> Option<&'static Mutex<Receiver<TrayAction>>> {
+        TRAY_RECEIVER.get()
+    }
 
-    // Show menu
-    let show_tx = TRAY_SENDER.get().expect("TRAY_SENDER not initialized");
-    let show_tx = show_tx.clone();
-    tray.add_menu_item("Show", move || {
-        let _ = show_tx.send(TrayAction::Show);
-    })
-    .expect("Failed to add Show item");
+    pub fn init_tray() -> TrayItem {
+        // Create tray icon using a Windows resource name embedded via tray.rc
+        let mut tray = TrayItem::new("Nex Cafe", IconSource::Resource("app-icon"))
+            .expect("Failed to create tray icon");
 
-    tray
+        // Show menu
+        let show_tx = TRAY_SENDER.get().expect("TRAY_SENDER not initialized");
+        let show_tx = show_tx.clone();
+        tray.add_menu_item("Show", move || {
+            let _ = show_tx.send(TrayAction::Show);
+        })
+        .expect("Failed to add Show item");
+
+        tray
+    }
 }

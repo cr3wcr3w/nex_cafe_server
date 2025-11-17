@@ -24,3 +24,9 @@ script = []
 identifier = "com.nexcafe.server"
 publisher = "John Kenneth Racelis"
 icon = ["icons/icon.ico"]
+
+[web.watcher]
+# when watcher trigger, regenerate the `index.html`
+reload_html = true
+# which files or dirs will be watcher monitoring
+watch_path = ["src"]

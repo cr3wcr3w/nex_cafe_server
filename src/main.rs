@@ -2,7 +2,7 @@
 use dioxus::desktop::tao::window::Fullscreen;
 use dioxus::desktop::{tao, use_window, Config, WindowBuilder};
 use dioxus::prelude::*;
-use std::sync::mpsc;
+use std::sync::mpsc::channel;
 use tao::event::{Event, WindowEvent};
 use tracing::info;
 
@@ -11,9 +11,7 @@ mod ui;
 
 use crate::shared::constants::{PKG_VERSION, PROJECTNAME};
 use crate::shared::utils::logging::init_tracing;
-use crate::ui::shared::utils::setup_tray::{
-    init_tray_channel, tray_init, tray_receiver, TrayAction,
-};
+use crate::ui::shared::utils::setup_tray::{TrayAction, TrayChannel};
 use crate::ui::shared::utils::webview::setup_webview2_user_data;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
@@ -32,13 +30,17 @@ fn main() {
     init_tracing();
     info!("Initializing tracing completed");
 
-    setup_webview2_user_data();
-    info!("WebView2 user data folder setup completed");
+    let os = std::env::consts::OS;
+
+    if os == "windows" {
+        setup_webview2_user_data();
+        info!("WebView2 user data folder setup completed");
+    }
 
     // Initialize a channel so the tray can signal actions
-    let (tx, rx) = mpsc::channel::<TrayAction>();
-    init_tray_channel(tx, rx);
-    let _tray_icon = tray_init();
+    let (tx, rx) = channel::<TrayAction>();
+    TrayChannel::init(tx, rx);
+    let _tray_icon = TrayChannel::init_tray();
     info!("System tray initialization completed");
 
     info!("Starting Dioxus main app");
@@ -78,7 +80,7 @@ pub fn Hero() -> Element {
     let window_clone = window.clone();
     let _ = use_hook(move || {
         // Intercept events: drain tray actions and handle close-to-hide
-        let tray_rx = tray_receiver();
+        let tray_rx = TrayChannel::receiver();
         window.create_wry_event_handler(move |event, _| {
             // Drain any pending tray actions
             if let Some(mtx) = &tray_rx {
