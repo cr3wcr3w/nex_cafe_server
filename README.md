@@ -16,14 +16,13 @@ Desktop server for a cyber cafe (PC rental) business. Built with Dioxus 0.7 for 
 
 ## Tech Stack
 
-- Dioxus 0.7 (desktop)
+- Dioxus 0.7.1 (desktop)
 - tailwindcss
 - axum
 
 ## Run (Desktop - Windows)
 
 ```bash
-npm run watch:css // optional
 dx serve --windows --hot-patch
 ```
 ## Useful Commands
@@ -41,7 +40,6 @@ cargo +nightly udeps
 
 Bundle:
 ```bash
-npm run build:css
 dx bundle --package-types "msi" // windows
 ```
 
