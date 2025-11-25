@@ -6,21 +6,22 @@ use std::sync::mpsc::channel;
 use tao::event::{Event, WindowEvent};
 use tracing::info;
 
+mod api;
 mod shared;
 mod ui;
 
-use crate::shared::constants::{PKG_VERSION, PROJECTNAME};
 use crate::shared::utils::logging::init_tracing;
+use crate::ui::routes::dashboard::Dashboard;
+use crate::ui::routes::home::Home;
 use crate::ui::shared::utils::setup_tray::{TrayAction, TrayChannel};
 use crate::ui::shared::utils::webview::setup_webview2_user_data;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 enum Route {
-    #[layout(Navbar)]
     #[route("/")]
     Home {},
-    #[route("/blog/:id")]
-    Blog { id: i32 },
+    #[route("/dashboard")]
+    Dashboard {},
 }
 
 const ICON: Asset = asset!("/icons/icon.ico");
@@ -43,6 +44,9 @@ fn main() {
     let _tray_icon = TrayChannel::init_tray();
     info!("System tray initialization completed");
 
+    api::start_server();
+    info!("API server started");
+
     info!("Starting Dioxus main app");
 
     LaunchBuilder::new()
@@ -51,7 +55,7 @@ fn main() {
                 .with_exits_when_last_window_closes(false)
                 .with_window(
                     WindowBuilder::new()
-                        .with_title("Nex Cafe Client")
+                        .with_title("Nex Cafe Server")
                         .with_always_on_top(false) //  true
                         .with_decorations(false)
                         .with_content_protection(true)
@@ -66,15 +70,6 @@ fn main() {
 
 #[component]
 fn App() -> Element {
-    rsx! {
-        document::Link { rel: "icon", href: ICON }
-        document::Link { rel: "stylesheet", href: TAILWIND_CSS }
-        Router::<Route> {}
-    }
-}
-
-#[component]
-pub fn Hero() -> Element {
     // tray event handler to show window and handle close-to-tray
     let window = use_window();
     let window_clone = window.clone();
@@ -105,51 +100,8 @@ pub fn Hero() -> Element {
     });
 
     rsx! {
-        div {
-            p { class: "text-red-900", "{PROJECTNAME}" }
-            p { "{PKG_VERSION}" }
-        }
-    }
-}
-
-/// Home page
-#[component]
-fn Home() -> Element {
-    rsx! {
-        Hero {}
-
-    }
-}
-
-/// Blog page
-#[component]
-pub fn Blog(id: i32) -> Element {
-    rsx! {
-        div { id: "blog",
-
-            // Content
-            h1 { "This is blog #{id}!" }
-            p {
-                "In blog #{id}, we show how the Dioxus router works and how URL parameters can be passed as props to our route components."
-            }
-
-            // Navigation links
-            Link { to: Route::Blog { id: id - 1 }, "Previous" }
-            span { " <---> " }
-            Link { to: Route::Blog { id: id + 1 }, "Next" }
-        }
-    }
-}
-
-/// Shared navbar component.
-#[component]
-fn Navbar() -> Element {
-    rsx! {
-        div { id: "navbar",
-            Link { to: Route::Home {}, "Home" }
-            Link { to: Route::Blog { id: 1 }, "Blog" }
-        }
-
-        Outlet::<Route> {}
+        document::Link { rel: "icon", href: ICON }
+        document::Link { rel: "stylesheet", href: TAILWIND_CSS }
+        Router::<Route> {}
     }
 }

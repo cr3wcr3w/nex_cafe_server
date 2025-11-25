@@ -1,2 +1,17 @@
 @import "tailwindcss";
 @source "./src/ui/**/*.{rs,html,css}";
+
+@theme {
+    --color-base-100: oklch(30.857% 0.023 264.149);
+    --color-base-200: oklch(28.036% 0.019 264.182);
+    --color-base-300: oklch(26.346% 0.018 262.177);
+
+    --color-primary: oklch(86.133% 0.141 139.549);
+    --color-secondary: oklch(73.375% 0.165 35.353);
+    --color-accent: oklch(74.229% 0.133 311.379);
+    --color-neutral: oklch(24.731% 0.02 264.094);
+    --color-info: oklch(86.078% 0.142 206.182);
+    --color-success: oklch(86.171% 0.142 166.534);
+    --color-warning: oklch(86.163% 0.142 94.818);
+    --color-error: oklch(82.418% 0.099 33.756);
+}
